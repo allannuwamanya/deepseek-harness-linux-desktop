@@ -1,4 +1,5 @@
 /** Validate the assembled application, including native Office conversion outside ASAR. */
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { parseArgs } from 'node:util'
 import { desktopArtifactOutput, resolveDesktopBuildTarget, resolveDesktopTargetBuildPaths } from './desktop-build-paths.mjs'
@@ -22,7 +23,11 @@ const resources = join(application, windows || linux ? 'resources' : 'Resources'
 const executable = windows
   ? join(application, 'DeepSeek Harness.exe')
   : linux
-    ? join(application, 'deepseek-harness')
+    ? (existsSync(join(application, 'deepseek-harness'))
+        ? join(application, 'deepseek-harness')
+        : existsSync(join(application, 'DeepSeek Harness'))
+          ? join(application, 'DeepSeek Harness')
+          : join(application, 'dsh-desktop'))
     : join(application, 'MacOS', 'DeepSeek Harness')
 const descriptor = await verifyDesktopRuntime(paths.dsh, readDesktopRuntime(paths.dsh).release.version,
   resolveDesktopPackageTarget(target))

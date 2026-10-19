@@ -111,8 +111,8 @@ export function createElectronBuilderConfig(
     extraMetadata: {
       dshDesktopAppId: appId,
       dshDesktopUpdateChannel: update?.channel ?? 'nightly',
-      homepage: 'https://github.com/deepseek-ai/deepseek-harness',
-      author: 'DeepSeek <support@deepseek.com>',
+      homepage: 'https://github.com/allannuwamanya/deepseek-harness-desktop-linux-desktop',
+      author: 'allannuwamanya <allan.info.comp@gmail.com>',
       ...(policy === undefined ? {} : { dshMandatoryUpdatePolicy: policy }),
       ...buildVersion === productVersion ? {} : { version: buildVersion },
       ...packaged === undefined ? {} : { dshBuildCommit: packaged.commit, dshBuildDirty: packaged.dirty },
@@ -252,7 +252,7 @@ export function createElectronBuilderConfig(
     linux: {
       category: 'Development',
       executableName: 'deepseek-harness',
-      maintainer: 'DeepSeek <support@deepseek.com>',
+      maintainer: 'allannuwamanya <allan.info.comp@gmail.com>',
       target: env.DSH_DESKTOP_LINUX_TARGET ? env.DSH_DESKTOP_LINUX_TARGET.split(',') : ['deb'],
       icon: fileURLToPath(new URL('../resources/icon.png', import.meta.url)),
     },

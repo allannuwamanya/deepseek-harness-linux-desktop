@@ -35,13 +35,15 @@ export function desktopReleasesRoot(env: NodeJS.ProcessEnv): string {
 export async function retainDesktopCi(env: NodeJS.ProcessEnv, appRoot = resolve(import.meta.dirname, '..')): Promise<string> {
   const target = resolveDesktopBuildTarget(env)
   const windows = target === 'win-x64'
-  const platform = windows ? 'win32' : 'darwin'
+  const linux = target === 'linux-x64'
+  const platform = windows ? 'win32' : linux ? 'linux' : 'darwin'
   const settings = loadDesktopPackageEnvironment(platform, env, appRoot, { unsigned: true })
   const preset = settings.DSH_PACKAGING_PRESET
   if (preset !== 'test' && preset !== 'production') throw new Error('desktop retention: a machine preset is required')
   if (windows && !['signed', 'unsigned'].includes(env.PACKAGE_SIGNING ?? '')) throw new Error('desktop retention: invalid signing selection')
-  if (!windows && !['true', 'false'].includes(env.PACKAGE_SKIP_NOTARIZATION ?? '')) throw new Error('desktop retention: invalid notarization selection')
+  if (!windows && !linux && !['true', 'false'].includes(env.PACKAGE_SKIP_NOTARIZATION ?? '')) throw new Error('desktop retention: invalid notarization selection')
   const qualification = windows ? (env.PACKAGE_SIGNING === 'signed' ? 'signed' : 'unsigned')
+    : linux ? 'unsigned'
     : (env.PACKAGE_SKIP_NOTARIZATION === 'true' ? 'unnotarized' : 'notarized')
   const product: { version: string } = JSON.parse(await readFile(join(appRoot, 'package.json'), 'utf8'))
   const version = validateDesktopBuildVersion(required(env, 'PACKAGE_VERSION'), product.version)
@@ -61,7 +63,7 @@ export async function retainDesktopCi(env: NodeJS.ProcessEnv, appRoot = resolve(
     ? join(paths.root, mode) : join(appRoot, '.desktop-build', 'targets', target, mode)
   const base = `deepseek-harness-${version}-${windows ? 'win-x64' : target}`
   const debugSuffix = qualification === 'unnotarized' ? '-unnotarized' : qualification === 'unsigned' ? '-unsigned' : ''
-  const names = windows ? [`${base}${debugSuffix}.exe`] : [`${base}${debugSuffix}.dmg`, `${base}${debugSuffix}.zip`]
+  const names = windows ? [`${base}${debugSuffix}.exe`] : linux ? [`${base}${debugSuffix}.deb`] : [`${base}${debugSuffix}.dmg`, `${base}${debugSuffix}.zip`]
   if (qualification === 'signed' || qualification === 'notarized') {
     names.push(`${base}.${windows ? 'exe' : 'zip'}.blockmap`, desktopBuildRecordFilename(target), desktopUpdateMetadataFilename(version, platform, source.channel))
   }

@@ -18,7 +18,7 @@ import { desktopPublishQualificationError } from './desktop-publish-qualificatio
 
 const routeSchema = z.object({ runId: z.string(), attempt: z.string(), commit: z.string(), runnerName: z.string(),
   sourceRef: z.string(), channel: z.enum(['nightly', 'latest']),
-  target: z.enum(['mac-arm64', 'win-x64']), preset: z.enum(['test', 'production']) })
+  target: z.enum(['mac-arm64', 'win-x64', 'linux-x64']), preset: z.enum(['test', 'production']) })
 
 /**
  * Check retained bytes, original machine, destination and signatures before reading any upload secret.
@@ -39,7 +39,7 @@ export async function prepareDesktopPublication(env: NodeJS.ProcessEnv, verifySi
   }
   const diagnostic = desktopPublishQualificationError(source.qualification)
   if (diagnostic) throw new Error(diagnostic)
-  if (source.qualification !== (source.target === 'win-x64' ? 'signed' : 'notarized')) throw new Error('desktop publish: package qualification does not match its platform')
+  if (source.qualification !== (source.target === 'win-x64' ? 'signed' : source.target === 'linux-x64' ? 'unsigned' : 'notarized')) throw new Error('desktop publish: package qualification does not match its platform')
   const config = await readDesktopPublishConfig(env.DSH_PACKAGING_CONFIG_DIR!, source.preset)
   const directory = retainedDesktopPath(root, route.runId, route.attempt)
   const environment = source.preset === 'test'

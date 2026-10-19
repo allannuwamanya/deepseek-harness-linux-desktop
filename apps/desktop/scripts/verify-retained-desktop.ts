@@ -28,6 +28,11 @@ export async function verifyRetainedDesktopSignatures(
       '-Installer', join(directory, installer.name), '-Thumbprint', config.windows.certificateThumbprint])
     return
   }
+  if (source.target === 'linux-x64') {
+    const deb = manifest.files.find(file => file.name.endsWith('.deb'))
+    if (!deb) throw new Error('desktop publish: deb installer missing')
+    return
+  }
   if (process.platform !== 'darwin' || source.qualification !== 'notarized' || !config.macOS) throw new Error('desktop publish: notarized package and signer configuration required on macOS')
   const dmg = manifest.files.find(file => file.name.endsWith('.dmg'))
   const zip = manifest.files.find(file => file.name.endsWith('.zip'))

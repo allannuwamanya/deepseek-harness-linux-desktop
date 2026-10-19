@@ -111,7 +111,7 @@ export function createElectronBuilderConfig(
     extraMetadata: {
       dshDesktopAppId: appId,
       dshDesktopUpdateChannel: update?.channel ?? 'nightly',
-      homepage: 'https://github.com/allannuwamanya/deepseek-harness-desktop-linux-desktop',
+      homepage: 'https://github.com/allannuwamanya/deepseek-harness-linux-desktop',
       author: 'allannuwamanya <allan.info.comp@gmail.com>',
       ...(policy === undefined ? {} : { dshMandatoryUpdatePolicy: policy }),
       ...buildVersion === productVersion ? {} : { version: buildVersion },

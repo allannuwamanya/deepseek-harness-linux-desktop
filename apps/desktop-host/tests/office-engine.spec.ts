@@ -137,3 +137,11 @@ it('leaves external engines and the archived WASM engine at their own locations'
   expect(f.require('@deepseek-ai/libreoffice-kit-wasm/package.json'))
     .toMatchObject({ path: realpathSync(dirname(wasm)) })
 })
+
+it('normalizes lstatSync and statSync null results under ASAR', () => {
+  const f = fixture()
+  const fs = f.require('node:fs') as typeof import('node:fs')
+  expect(fs.lstatSync).toBeDefined()
+  expect(fs.statSync).toBeDefined()
+  expect(fs.lstatSync(join(f.root, 'nonexistent'), { throwIfNoEntry: false })).toBeUndefined()
+})

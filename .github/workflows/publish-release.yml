@@ -1,0 +1,47 @@
+name: Publish Linux Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    name: Publish Linux .deb Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39229821904
+          name: deepseek-harness-linux-deb
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Inspect Downloaded Files
+        run: ls -la
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.2.1-linux
+          name: DeepSeek Harness Desktop Linux v0.2.1-rc.2
+          body: |
+            ## DeepSeek Harness Linux Desktop Edition (v0.2.1-rc.2)
+
+            Unofficial Linux Desktop `.deb` package for DeepSeek Harness.
+
+            ### Download:
+            Click the `.deb` asset below to download directly.
+
+            ### Installation:
+            ```bash
+            sudo apt install -y ./deepseek-harness-0.2.1-rc.2-linux-amd64-unsigned.deb
+            ```
+
+            * Built from commit ${{ github.sha }}
+            * Packaged for Linux x86_64 (`amd64`).
+          files: "*.deb"
+          draft: false
+          prerelease: false

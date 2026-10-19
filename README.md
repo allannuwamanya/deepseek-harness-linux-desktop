@@ -1,6 +1,22 @@
-# DeepSeek Harness
+# DeepSeek Harness (Linux Desktop Edition)
 
 English | [中文](README.zh.md)
+
+[![Linux Desktop](https://img.shields.io/badge/Download%20Linux%20.deb-v0.2.1--rc.2-blue?logo=debian&logoColor=white)](https://github.com/allannuwamanya/deepseek-harness-linux-desktop/releases/download/v0.2.1-linux/deepseek-harness-0.2.1-rc.2-linux-amd64-unsigned.deb)
+
+An unofficial Linux desktop port of DeepSeek Harness, bringing the native desktop application experience to Linux users.
+
+### 📥 Direct Download for Linux (.deb)
+Click below to download the compiled `.deb` package directly:
+
+👉 **[Download DeepSeek Harness .deb (x86_64)](https://github.com/allannuwamanya/deepseek-harness-linux-desktop/releases/download/v0.2.1-linux/deepseek-harness-0.2.1-rc.2-linux-amd64-unsigned.deb)**
+
+To install on Ubuntu, Debian, Pop!_OS, or Linux Mint:
+```sh
+sudo apt install -y ./deepseek-harness-0.2.1-rc.2-linux-amd64-unsigned.deb
+```
+
+---
 
 DeepSeek Harness (`dsh`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
 

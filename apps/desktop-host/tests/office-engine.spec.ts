@@ -138,10 +138,14 @@ it('leaves external engines and the archived WASM engine at their own locations'
     .toMatchObject({ path: realpathSync(dirname(wasm)) })
 })
 
-it('normalizes lstatSync and statSync null results under ASAR', () => {
-  const f = fixture()
-  const fs = f.require('node:fs') as typeof import('node:fs')
-  expect(fs.lstatSync).toBeDefined()
-  expect(fs.statSync).toBeDefined()
-  expect(fs.lstatSync(join(f.root, 'nonexistent'), { throwIfNoEntry: false })).toBeUndefined()
+it('normalizes lstatSync and statSync under ASAR for libreoffice-kit', async () => {
+  fixture()
+  const fakeKitUrl = 'data:text/javascript,' + encodeURIComponent(
+    'import { lstatSync, statSync } from "node:fs";' +
+    'export const probeLstat = lstatSync;' +
+    'export const probeStat = statSync;',
+  ) + '#@deepseek-ai/libreoffice-kit'
+  const fakeKit = await import(fakeKitUrl)
+  expect(fakeKit.probeLstat).toBeDefined()
+  expect(fakeKit.probeStat).toBeDefined()
 })

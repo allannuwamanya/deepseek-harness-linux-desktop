@@ -12,9 +12,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'apps/desktop/**'
-      - '.github/workflows/package-linux-deb.yml'
 
 permissions:
   contents: write
